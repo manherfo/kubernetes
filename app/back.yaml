@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back-deployment
+  labels:
+    app: back
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: back
+  template:
+    metadata:
+      labels:
+        app: back
+    spec:
+      containers:
+      - name: back
+        image: ricardoandre97/backend-k8s-hands-on:v2
+        imagePullPolicy: IfNotPresent
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-back
+  labels:
+    app: back
+spec:
+  type: NodePort
+  selector:
+    app: back
+  ports:
+    - protocol: TCP
+      port: 80 #service
+      targetPort: 9090 #pod
+      nodePort: 30080

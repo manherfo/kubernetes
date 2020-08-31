@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pods1
+spec:
+  template:
+    # This is the pod template
+    spec:
+      containers:
+      - name: cont1
+        image: nginx
+        #command: ['sh', '-c', 'echo "Hello, Kubernetes!" && sleep 3600']
+      restartPolicy: OnFailure
+    # The pod template ends here
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pods2
+spec:
+  template:
+    # This is the pod template
+    spec:
+      containers:
+      - name: cont1
+        image: nginx
+        #command: ['sh', '-c', 'echo "Hello, Kubernetes!" && sleep 3600']
+      restartPolicy: OnFailure
+    # The pod template ends here

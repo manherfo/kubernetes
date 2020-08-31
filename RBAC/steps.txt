@@ -1,0 +1,30 @@
+## RBAC
+minikube start --vm-driver=none  --extra-config=apiserver.authorization-mode=RBAC
+
+## Create keys and sign
+openssl genrsa -out mauricio.key 2048
+openssl req -new -key mauricio.key -out mauricio.csr -subj "/CN=mauricio/O=dev"
+kubectl config view
+sudo openssl x509 -req -in mauricio.csr -CA /Users/mauriciohernandez/.minikube/ca.crt -CAkey /Users/mauriciohernandez/.minikube/ca.key -CAcreateserial -out mauricio.crt -days 500
+openssl x509 -in  mauricio.crt  -noout -text
+
+## Isolated env
+kubectl config view  | grep server
+docker run --rm -ti -v $PWD:/test -w /test  -v /Users/mauriciohernandez/.minikube/ca.crt -v /usr/bin/kubectl:/usr/bin/kubectl alpine sh
+
+##
+kubectl config view 
+kubectl config current-context 
+kubectl config get-contexts
+kubectl config use-context minikube                                                                                                                  
+
+## Configure kubectl for user
+kubectl config set-cluster minikube --server=https://192.168.1.140:8443 --certificate-authority=/Users/mauriciohernandez/.minikube/ca.crt
+kubectl config set-credentials mauricio --client-certificate=mauricio.crt --client-key=mauricio.key
+kubectl config set-context mauricio --cluster=minikube --user=mauricio
+kubectl config use-context mauricio
+
+- name: minikube
+  user:
+    client-certificate: /Users/mauriciohernandez/.minikube/profiles/minikube/client.crt
+    client-key: /Users/mauriciohernandez/.minikube/profiles/minikube/client.key

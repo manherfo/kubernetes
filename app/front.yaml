@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-deployment
+  labels:
+    app: front
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      volumes:
+      - name: test-volume
+        hostPath: 
+          path: /Users/mauriciohernandez/Documents/projects/kubernetes/app/front/index.html
+      containers:
+      - name: front
+        image: nginx:alpine
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /usr/share/nginx/html/index.html
+            name: test-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-front
+  labels:
+    app: front
+spec:
+  type: NodePort
+  selector:
+    app: front
+  ports:
+    - protocol: TCP
+      port: 80 #service
+      targetPort: 80 #pod
+      nodePort: 30081

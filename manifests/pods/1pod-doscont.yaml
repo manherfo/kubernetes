@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: 1pod2cont
+spec:
+  template:
+    # This is the pod template
+    spec:
+      containers:
+      - name: cont1
+        image: python:3.6-alpine
+        command: ['sh', '-c', 'touch cont1 && python -m http.server 8082']
+      - name: cont2
+        image: python:3.6-alpine
+        command: ['sh', '-c', 'touch cont3 && python -m http.server 8083']
+        #command: ['sh', '-c', 'echo "Hello, Kubernetes!" && sleep 3600']
+      restartPolicy: OnFailure
+    # The pod template ends here
